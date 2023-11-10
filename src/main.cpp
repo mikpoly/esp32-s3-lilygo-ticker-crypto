@@ -1,16 +1,16 @@
-#include <TFT_eSPI.h>
 #include <Button2.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include <TFT_eSPI.h>
 
 TFT_eSPI tft = TFT_eSPI();
 #define BUTTON_PIN 14
 Button2 button = Button2(BUTTON_PIN);
 
 bool page1Active = true;
-const char* ssid = "yourwifi";
-const char* password = "yourwifipassword";
+const char* ssid = "YOURWIFINAME";
+const char* password = "YOURWIFIPASSWORD";
 
 const char* coinGeckoAPIURL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tron,binancecoin,solana,kaspa,flux,swissborg,neurai,monero,avalanche-2&vs_currencies=usd";
 const char* coinGeckoMarketURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tron,binancecoin,solana,kaspa,flux,swissborg,neurai,monero,avalanche-2&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h&locale=en";
@@ -72,7 +72,7 @@ void setup() {
     if (page1Active) {
       // Page 1: Bitcoin, Ethereum, TRON, Binance Coin, Solana
       displayCryptoPrice("BTC", getBitcoinPrice(), 0, lastBTCPrice, TFT_ORANGE);
-      displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_DARKCYAN);
+      displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_MAGENTA);
       displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_RED);
       displayCryptoPrice("BNB", getBinanceCoinPrice(), 3, lastBNBPrice, TFT_YELLOW);
       displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_PURPLE);
@@ -83,7 +83,7 @@ void setup() {
       displayCryptoPrice("CHSB", getCHSBPrice(), 2, lastCHSBPrice, TFT_GREENYELLOW);
       displayCryptoPrice("XNA", getXNAPrice(), 3, lastXNAPrice, TFT_MAGENTA);
       displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_ORANGE);
-      displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_RED);
+      displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_MAGENTA);
     }
   });
 
@@ -91,18 +91,18 @@ void setup() {
   if (page1Active) {
     // Page 1: Bitcoin, Ethereum, TRON, Binance Coin, Solana
     displayCryptoPrice("BTC", getBitcoinPrice(), 0, lastBTCPrice, TFT_ORANGE);
-    displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_DARKCYAN);
-    displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_RED);
+    displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_RED);
+    displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_BLUE);
     displayCryptoPrice("BNB", getBinanceCoinPrice(), 3, lastBNBPrice, TFT_YELLOW);
-    displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_PURPLE);
+    displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_GREEN);
   } else {
     // Page 2: Kaspa, Flux, SwissBorg, Neurai, Monero, Avalanche
     displayCryptoPrice("KAS", getKaspaPrice(), 0, lastKASPrice, TFT_CYAN);
-    displayCryptoPrice("FLUX", getFluxPrice(), 1, lastFLUXPrice, TFT_DARKCYAN);
-    displayCryptoPrice("CHSB", getCHSBPrice(), 2, lastCHSBPrice, TFT_GREENYELLOW);
-    displayCryptoPrice("XNA", getXNAPrice(), 3, lastXNAPrice, TFT_PURPLE);
-    displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_ORANGE);
-    displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_RED);
+    displayCryptoPrice("FLUX", getFluxPrice(), 1, lastFLUXPrice, TFT_MAGENTA);
+    displayCryptoPrice("CHSB", getCHSBPrice(), 2, lastCHSBPrice, TFT_WHITE);
+    displayCryptoPrice("XNA", getXNAPrice(), 3, lastXNAPrice, TFT_YELLOW);
+    displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_MAGENTA);
+    displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_MAGENTA);
   }
 }
 
@@ -333,7 +333,7 @@ float getAVAXPrice() {
       DeserializationError error = deserializeJson(doc, payload);
 
       if (!error) {
-        float avaxPrice = doc["avalanche-2"]["usd"].as<float>();
+        float avaxPrice = doc["avalanche"]["usd"].as<float>();
         if (avaxPrice != 0.0) {
           lastAVAXPrice = avaxPrice;
         }
@@ -357,13 +357,6 @@ void displayCryptoPrice(const char* cryptoName, float price, int position, float
   tft.setTextColor(textColor); // Couleur du texte
   tft.print(cryptoName);
 
-  if (lastPrice != 0.0) {
-    if (price > lastPrice) {
-      drawArrow(160, y, true, TFT_GREEN); // Flèche verte vers le haut pour une augmentation
-    } else if (price < lastPrice) {
-      drawArrow(160, y, false, TFT_RED); // Flèche rouge vers le bas pour une diminution
-    }
-  }
   tft.setCursor(220, y); // Position du prix
   tft.print("$");
   tft.setCursor(80, y); // Position du prix
@@ -371,7 +364,3 @@ void displayCryptoPrice(const char* cryptoName, float price, int position, float
   lastPrice = price;
 }
 
-void drawArrow(int x, int y, bool isIncrease, uint16_t arrowColor) {
-  int arrowSize = 10;
-  tft.fillTriangle(x, y, x - arrowSize, y + (isIncrease ? arrowSize : -arrowSize), x + arrowSize, y + (isIncrease ? arrowSize : -arrowSize), arrowColor);
-}
