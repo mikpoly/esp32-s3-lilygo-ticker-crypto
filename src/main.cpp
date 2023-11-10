@@ -9,8 +9,8 @@ TFT_eSPI tft = TFT_eSPI();
 Button2 button = Button2(BUTTON_PIN);
 
 bool page1Active = true;
-const char* ssid = "YOURWIFINAME";
-const char* password = "YOURWIFIPASSWORD";
+const char* ssid = "YORWIFINAME";
+const char* password = "YOUWIFIPASSWORD";
 
 const char* coinGeckoAPIURL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tron,binancecoin,solana,kaspa,flux,swissborg,neurai,monero,avalanche-2&vs_currencies=usd";
 const char* coinGeckoMarketURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tron,binancecoin,solana,kaspa,flux,swissborg,neurai,monero,avalanche-2&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h&locale=en";
@@ -72,10 +72,10 @@ void setup() {
     if (page1Active) {
       // Page 1: Bitcoin, Ethereum, TRON, Binance Coin, Solana
       displayCryptoPrice("BTC", getBitcoinPrice(), 0, lastBTCPrice, TFT_ORANGE);
-      displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_MAGENTA);
+      displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_DARKCYAN);
       displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_RED);
       displayCryptoPrice("BNB", getBinanceCoinPrice(), 3, lastBNBPrice, TFT_YELLOW);
-      displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_PURPLE);
+      displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_MAGENTA);
     } else {
       // Page 2: Kaspa, Flux, SwissBorg, Neurai, Monero, Avalanche
       displayCryptoPrice("KAS", getKaspaPrice(), 0, lastKASPrice, TFT_CYAN);
@@ -83,7 +83,7 @@ void setup() {
       displayCryptoPrice("CHSB", getCHSBPrice(), 2, lastCHSBPrice, TFT_GREENYELLOW);
       displayCryptoPrice("XNA", getXNAPrice(), 3, lastXNAPrice, TFT_MAGENTA);
       displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_ORANGE);
-      displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_MAGENTA);
+      displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_RED);
     }
   });
 
@@ -91,18 +91,18 @@ void setup() {
   if (page1Active) {
     // Page 1: Bitcoin, Ethereum, TRON, Binance Coin, Solana
     displayCryptoPrice("BTC", getBitcoinPrice(), 0, lastBTCPrice, TFT_ORANGE);
-    displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_RED);
-    displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_BLUE);
+    displayCryptoPrice("ETH", getEthereumPrice(), 1, lastETHPrice, TFT_DARKCYAN);
+    displayCryptoPrice("TRX", getTronPrice(), 2, lastTRXPrice, TFT_RED);
     displayCryptoPrice("BNB", getBinanceCoinPrice(), 3, lastBNBPrice, TFT_YELLOW);
-    displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_GREEN);
+    displayCryptoPrice("SOL", getSolanaPrice(), 4, lastSOLPrice, TFT_MAGENTA);
   } else {
     // Page 2: Kaspa, Flux, SwissBorg, Neurai, Monero, Avalanche
     displayCryptoPrice("KAS", getKaspaPrice(), 0, lastKASPrice, TFT_CYAN);
     displayCryptoPrice("FLUX", getFluxPrice(), 1, lastFLUXPrice, TFT_MAGENTA);
     displayCryptoPrice("CHSB", getCHSBPrice(), 2, lastCHSBPrice, TFT_WHITE);
     displayCryptoPrice("XNA", getXNAPrice(), 3, lastXNAPrice, TFT_YELLOW);
-    displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_MAGENTA);
-    displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_MAGENTA);
+    displayCryptoPrice("XMR", getXMRPrice(), 4, lastXMRPrice, TFT_ORANGE);
+    displayCryptoPrice("AVAX", getAVAXPrice(), 5, lastAVAXPrice, TFT_RED);
   }
 }
 
@@ -333,7 +333,7 @@ float getAVAXPrice() {
       DeserializationError error = deserializeJson(doc, payload);
 
       if (!error) {
-        float avaxPrice = doc["avalanche"]["usd"].as<float>();
+        float avaxPrice = doc["avalanche-2"]["usd"].as<float>();
         if (avaxPrice != 0.0) {
           lastAVAXPrice = avaxPrice;
         }
@@ -362,5 +362,6 @@ void displayCryptoPrice(const char* cryptoName, float price, int position, float
   tft.setCursor(80, y); // Position du prix
   tft.print(price, 5); // Afficher le prix avec 5 décimales
   lastPrice = price;
-}
 
+
+}
