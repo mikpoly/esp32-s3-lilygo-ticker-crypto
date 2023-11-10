@@ -62,7 +62,7 @@ void setup() {
     tft.setTextSize(1);
     tft.setCursor(10, 150); // Ajustez la position verticale selon vos besoins
     tft.setTextColor(TFT_WHITE); // Couleur du texte
-    tft.print("Ticker Created by mikpoly Twitter @ m_mikpoly");
+    tft.print("Ticker Created by Mikpoly Twitter @ m_mikpoly");
   }
 
   button.setPressedHandler([](Button2& b) {
@@ -113,7 +113,7 @@ void loop() {
     tft.setTextSize(1);
     tft.setCursor(10, 150); // Ajustez la position verticale selon vos besoins
     tft.setTextColor(TFT_WHITE); // Couleur du texte
-    tft.print("Ticker Created by mikpoly Twitter @ m_mikpoly");}
+    tft.print("Ticker Created by Mikpoly Twitter @ m_mikpoly");}
     }
 
 float getBitcoinPrice() {
